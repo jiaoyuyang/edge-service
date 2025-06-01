@@ -13,15 +13,61 @@ spring:
 
   cloud:
     gateway:
-      mvc:
-        routes:
-          - id: catalog-route
-            uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books
-            predicates:
+      default-filters:
+        - name: Retry
+          args:
+            retries: 3
+            methods: GET
+            series: SERVER_ERROR
+            exceptions: java.io.IOException, java.util.concurrent.TimeoutException, java.net.ConnectException
+            backoff:
+              firstBackoff: 50ms
+              maxBackOff: 500ms
+              factor: 2
+              basedOnPreviousValue: false
+
+      routes:
+        - id: catalog-route
+          uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books
+          predicates:
               - Path=/books/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: catalogCircuitBreaker
+                fallbackUri: forward:/catalog-fallback
 
-          - id: order-route
-            uri: ${ORDER_SERVICE_URL:http://localhost:9002}/orders
-            predicates:
-              - Path=/orders/**
+        - id: order-route
+          uri: ${ORDER_SERVICE_URL:http://localhost:9002}/orders
+          predicates:
+            - Path=/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderCircuitBreaker
 
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 5s
+        pool:
+          type: elastic
+          max-idle-time: 15s
+          max-life-time: 60s
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 20
+        permitted-number-of-calls-in-half-open-state: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state:
+          seconds: 15
+  timelimiter:
+    configs:
+      default:
+        timeout-duration:
+          seconds: 5
+logging:
+  level:
+    io.github.resilience4j: DEBUG
