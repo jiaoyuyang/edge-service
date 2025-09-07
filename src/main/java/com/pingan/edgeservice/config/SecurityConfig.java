@@ -13,7 +13,7 @@ public class SecurityConfig {
         return http
                 .authorizeExchange(exchange ->
                      exchange.anyExchange().authenticated()) //所有的请求都需要认证
-                .formLogin(Customizer.withDefaults()) //通过登录表单启用用户认证
+                .oauth2Login(Customizer.withDefaults()) //使用OAuth2/OpenID Connect启用用户认证
                 .build();
     }
 
