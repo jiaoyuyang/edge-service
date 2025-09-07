@@ -34,8 +34,8 @@ spring:
         - name: RequestRateLimiter
           args:
             redis-rate-limiter:
-              replenishRate: 1
-              burstCapacity: 2
+              replenishRate: 10
+              burstCapacity: 20
               requestedTokens: 1
         - name: Retry
           args:
@@ -50,6 +50,11 @@ spring:
               basedOnPreviousValue: false
 
       routes:
+        - id: spa-route
+          uri: ${SPA_URL:http://localhost:9004}
+          predicates:
+            - Path=/,/*.css,/*.js,/favicon.ico
+
         - id: catalog-route
           uri: ${CATALOG_SERVICE_URL:http://localhost:9001}/books
           predicates:
@@ -69,14 +74,8 @@ spring:
               args:
                 name: orderCircuitBreaker
 
-        - id: spa-route
-          uri: ${SPA_URL:http://localhost:9004}
-          predicates:
-            - Path=/,/*.css,/*.js,/favicon.ico
-
-
       httpclient:
-        connect-timeout: 5000
+        connect-timeout: 2000
         response-timeout: 5s
         pool:
           type: elastic
