@@ -1,0 +1,49 @@
+{
+    "configurations": [
+        {
+            "request": "launch",
+            "type": "javadbg",
+            "name": "gradle clean",
+            "__internal_id": "335190d7-d76e-4a19-99a8-92851ca1eb66",
+            "temporary": true,
+            "withProfiling": false,
+            "withCoverage": false,
+            "killPrevSession": false,
+            "ignoreBuildErrors": false,
+            "verbose": false,
+            "any": {
+                "commandLine": "gradle clean --init-script \"/data/storage/el2/base/cache/catestinit.gradle\""
+            }
+        },
+        {
+            "request": "launch",
+            "type": "javadbg",
+            "name": "gradle bootJar",
+            "__internal_id": "7594df19-7c31-4bc0-8da8-cca8c0e288ee",
+            "temporary": true,
+            "withProfiling": false,
+            "withCoverage": false,
+            "killPrevSession": false,
+            "ignoreBuildErrors": false,
+            "verbose": false,
+            "any": {
+                "commandLine": "gradle bootJar --init-script \"/data/storage/el2/base/cache/catestinit.gradle\""
+            }
+        },
+        {
+            "request": "launch",
+            "type": "javadbg",
+            "name": "gradle bootRun",
+            "__internal_id": "0de1ff85-59db-40fb-ac81-0c1ff7ff11aa",
+            "temporary": true,
+            "withProfiling": false,
+            "withCoverage": false,
+            "killPrevSession": false,
+            "ignoreBuildErrors": false,
+            "verbose": false,
+            "any": {
+                "commandLine": "gradle bootRun --init-script \"/data/storage/el2/base/cache/catestinit.gradle\""
+            }
+        }
+    ]
+}
